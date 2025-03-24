@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 class DioHelper
 {
@@ -8,11 +11,18 @@ class DioHelper
   {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://newsapi.org/',
+        baseUrl: 'https://gnews.io/',
         receiveDataWhenStatusError: true,
+        validateStatus: (status) => true,
       ),
       );
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
   }
+
+
 
   static Future<Response> getData({
     required String url,
